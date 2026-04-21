@@ -24,27 +24,43 @@ function ContactPage() {
     }
   }, [searchParams]);
 
-  const validate = () => {
+  const validateField = (name, value) => {
+    const trimmedValue = value.trim();
+
+    if (name === "fullName" && trimmedValue === "") {
+      return "Por favor, completa el campo NOMBRE con tu nombre";
+    }
+
+    if (name === "email") {
+      if (
+        trimmedValue === "" ||
+        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedValue)
+      ) {
+        return "Correo electrónico no válido";
+      }
+    }
+
+    if (name === "phone" && trimmedValue === "") {
+      return "Por favor, introduce tu número de teléfono";
+    }
+
+    if (name === "message" && trimmedValue === "") {
+      return "";
+    }
+
+    return null;
+  };
+
+  const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = "Please, complete the field NAME with your name";
-    }
+    Object.entries(formData).forEach(([name, value]) => {
+      const error = validateField(name, value);
 
-    if (
-      !formData.email.trim() ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-    ) {
-      newErrors.email = "Invalid email";
-    }
-
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Please enter your phone number";
-    }
-
-    if (!formData.message.trim()) {
-      newErrors.message = "Please write your message";
-    }
+      if (error !== null) {
+        newErrors[name] = error;
+      }
+    });
 
     return newErrors;
   };
@@ -57,27 +73,46 @@ function ContactPage() {
       [name]: value,
     }));
 
+    const liveError = validateField(name, value);
+
     setErrors((prev) => ({
       ...prev,
-      [name]: "",
+      [name]: liveError === null ? undefined : liveError,
+    }));
+  };
+
+  const handleBlur = (event) => {
+    const { name, value } = event.target;
+    const blurError = validateField(name, value);
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: blurError === null ? undefined : blurError,
     }));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const validationErrors = validate();
+    const validationErrors = validateForm();
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) return;
 
-    console.log("Contact form submitted:", formData);
-    alert("Form submitted successfully!");
+    console.log("Formulario enviado:", {
+      fullName: formData.fullName.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      message: formData.message.trim(),
+    });
 
-    setFormData((prev) => ({
+    alert("Formulario enviado correctamente");
+
+    setFormData({
       ...initialState,
       email: searchParams.get("email") || "",
-    }));
+    });
+
     setErrors({});
   };
 
@@ -88,49 +123,54 @@ function ContactPage() {
       <form className="contact-form" onSubmit={handleSubmit} noValidate>
         <div className="form-group full-width">
           <label htmlFor="fullName">
-            Full Name <span className="required-mark">*</span>
+            Nombre completo <span className="required-mark">*</span>
           </label>
           <input
             type="text"
             id="fullName"
             name="fullName"
-            placeholder="Enter your full name"
+            placeholder="Introduce tu nombre completo"
             value={formData.fullName}
             onChange={handleChange}
-            className={errors.fullName ? "input-error" : ""}
+            onBlur={handleBlur}
+            className={errors.fullName !== undefined ? "input-error" : ""}
           />
-          {errors.fullName && <p className="error-message">{errors.fullName}</p>}
+          {errors.fullName && (
+            <p className="error-message">{errors.fullName}</p>
+          )}
         </div>
 
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="email">
-              Email <span className="required-mark">*</span>
+              Correo electrónico <span className="required-mark">*</span>
             </label>
             <input
               type="email"
               id="email"
               name="email"
-              placeholder="Enter your email address"
+              placeholder="Introduce tu correo electrónico"
               value={formData.email}
               onChange={handleChange}
-              className={errors.email ? "input-error" : ""}
+              onBlur={handleBlur}
+              className={errors.email !== undefined ? "input-error" : ""}
             />
             {errors.email && <p className="error-message">{errors.email}</p>}
           </div>
 
           <div className="form-group">
             <label htmlFor="phone">
-              Phone <span className="required-mark">*</span>
+              Teléfono <span className="required-mark">*</span>
             </label>
             <input
               type="text"
               id="phone"
               name="phone"
-              placeholder="Enter your phone number"
+              placeholder="Introduce tu número de teléfono"
               value={formData.phone}
               onChange={handleChange}
-              className={errors.phone ? "input-error" : ""}
+              onBlur={handleBlur}
+              className={errors.phone !== undefined ? "input-error" : ""}
             />
             {errors.phone && <p className="error-message">{errors.phone}</p>}
           </div>
@@ -138,22 +178,25 @@ function ContactPage() {
 
         <div className="form-group full-width">
           <label htmlFor="message">
-            Message <span className="required-mark">*</span>
+            Mensaje <span className="required-mark">*</span>
           </label>
           <textarea
             id="message"
             name="message"
             rows="8"
-            placeholder="Write your message here..."
+            placeholder="Escribe aquí tu mensaje..."
             value={formData.message}
             onChange={handleChange}
-            className={errors.message ? "input-error" : ""}
+            onBlur={handleBlur}
+            className={errors.message !== undefined ? "input-error" : ""}
           ></textarea>
-          {errors.message && <p className="error-message">{errors.message}</p>}
+          {errors.message && (
+            <p className="error-message">{errors.message}</p>
+          )}
         </div>
 
         <button type="submit" className="btn-primary submit-btn">
-          Submit
+          Enviar
         </button>
       </form>
     </section>
