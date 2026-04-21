@@ -15,44 +15,37 @@ function AnimalsPage() {
     totalFilteredAnimals,
   } = useAnimals();
 
-  if (loading) return <p>Cargando animales...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) return <section className="page-section"><p>Cargando animales...</p></section>;
+  if (error) return <section className="page-section"><p>{error}</p></section>;
 
   return (
-    <main style={{ padding: "20px" }}>
-      <h1>Animales</h1>
-      <p>Total de animales: {totalAnimals}</p>
+    <section className="page-section">
+      <div className="section-heading">
+        <h1>Censo</h1>
+        <p>
+          Vista actual del censo animal con búsqueda, filtro por especie y
+          paginación.
+        </p>
+      </div>
 
-      <section
-        style={{
-          display: "flex",
-          gap: "12px",
-          flexWrap: "wrap",
-          marginBottom: "20px",
-        }}
-      >
+      <div className="animals-summary">
+        <p><strong>Total de animales:</strong> {totalAnimals}</p>
+        <p>
+          <strong>Mostrando:</strong> {visibleAnimals.length} de {totalFilteredAnimals}
+        </p>
+      </div>
+
+      <section className="animals-filters">
         <input
           type="text"
           placeholder="Buscar por crotal, especie o raza"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            padding: "10px",
-            minWidth: "260px",
-            borderRadius: "8px",
-            border: "1px solid #ccc",
-          }}
         />
 
         <select
           value={speciesFilter}
           onChange={(e) => setSpeciesFilter(e.target.value)}
-          style={{
-            padding: "10px",
-            minWidth: "180px",
-            borderRadius: "8px",
-            border: "1px solid #ccc",
-          }}
         >
           <option value="">Todas las especies</option>
           <option value="Ovino">Ovino</option>
@@ -60,36 +53,11 @@ function AnimalsPage() {
         </select>
       </section>
 
-      <p>Mostrando {visibleAnimals.length} de {totalFilteredAnimals} animales filtrados</p>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: "16px",
-        }}
-      >
+      <div className="animals-grid">
         {visibleAnimals.map((animal) => (
-          <article
-            key={animal.id}
-            style={{
-              border: "1px solid #ddd",
-              borderRadius: "12px",
-              padding: "16px",
-              backgroundColor: "#fff",
-            }}
-          >
-            <img
-              src={animal.imagenRazaUrl}
-              alt={animal.raza}
-              style={{
-                width: "100%",
-                height: "160px",
-                objectFit: "cover",
-                borderRadius: "8px",
-              }}
-            />
-            <h2 style={{ fontSize: "18px" }}>{animal.crotal}</h2>
+          <article key={animal.id} className="animal-card">
+            <img src={animal.imagenRazaUrl} alt={animal.raza} />
+            <h3>{animal.crotal}</h3>
             <p><strong>Especie:</strong> {animal.especie}</p>
             <p><strong>Raza:</strong> {animal.raza}</p>
           </article>
@@ -97,21 +65,13 @@ function AnimalsPage() {
       </div>
 
       {hasMore && (
-        <div style={{ marginTop: "20px", textAlign: "center" }}>
-          <button
-            onClick={loadMore}
-            style={{
-              padding: "10px 18px",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
-          >
+        <div className="load-more-wrapper">
+          <button onClick={loadMore} className="btn-primary">
             Cargar más
           </button>
         </div>
       )}
-    </main>
+    </section>
   );
 }
 
