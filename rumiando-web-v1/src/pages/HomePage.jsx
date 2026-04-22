@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import WeatherAdvisory from "../components/WeatherAdvisory";
 
 function HomePage() {
   const [email, setEmail] = useState("");
@@ -86,11 +87,17 @@ function HomePage() {
         </div>
       </section>
 
+      <WeatherAdvisory />
+
       <section className="newsletter">
         <h2>¿Tienes alguna pregunta?</h2>
         <p>Déjanos ayudarte</p>
 
-        <form className="newsletter-form" onSubmit={handleNewsletterSubmit} noValidate>
+        <form
+          className="newsletter-form"
+          onSubmit={handleNewsletterSubmit}
+          noValidate
+        >
           <div className="input-wrapper">
             <span className="mail-icon">✉</span>
             <input

@@ -5,13 +5,19 @@ export const AnimalsContext = createContext();
 const ANIMALS_URL =
   `https://cdn.jsdelivr.net/gh/MARCOMON94/animals-api@main/animals.json?t=${Date.now()}`;
 
-const PAGE_SIZE = 10;
+const DEFAULT_ITEMS_PER_PAGE = 10;
 
 export function AnimalsProvider({ children }) {
   const [allAnimals, setAllAnimals] = useState([]);
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_ITEMS_PER_PAGE);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [speciesFilter, setSpeciesFilter] = useState("");
+  const [breedFilter, setBreedFilter] = useState("");
+  const [stateFilter, setStateFilter] = useState("");
+  const [corralFilter, setCorralFilter] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -39,6 +45,68 @@ export function AnimalsProvider({ children }) {
     fetchAnimals();
   }, []);
 
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
+  };
+
+  const handleSpeciesFilterChange = (value) => {
+    setSpeciesFilter(value);
+    setBreedFilter("");
+  };
+
+  const handleBreedFilterChange = (value) => {
+    setBreedFilter(value);
+  };
+
+  const handleStateFilterChange = (value) => {
+    setStateFilter(value);
+  };
+
+  const handleCorralFilterChange = (value) => {
+    setCorralFilter(value);
+  };
+
+  const handleItemsPerPageChange = (value) => {
+    setItemsPerPage(Number(value));
+  };
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setSpeciesFilter("");
+    setBreedFilter("");
+    setStateFilter("");
+    setCorralFilter("");
+  };
+
+  const speciesOptions = useMemo(() => {
+    return [...new Set(allAnimals.map((animal) => animal.especie).filter(Boolean))];
+  }, [allAnimals]);
+
+  const breedOptions = useMemo(() => {
+    return [...new Set(allAnimals.map((animal) => animal.raza).filter(Boolean))];
+  }, [allAnimals]);
+
+  const stateOptions = useMemo(() => {
+    return [...new Set(allAnimals.map((animal) => animal.estado).filter(Boolean))];
+  }, [allAnimals]);
+
+  const corralOptions = useMemo(() => {
+    return [...new Set(allAnimals.map((animal) => animal.loteCorral).filter(Boolean))];
+  }, [allAnimals]);
+
+  const filteredBreedOptions = useMemo(() => {
+    if (!speciesFilter) return breedOptions;
+
+    return [
+      ...new Set(
+        allAnimals
+          .filter((animal) => animal.especie === speciesFilter)
+          .map((animal) => animal.raza)
+          .filter(Boolean)
+      ),
+    ];
+  }, [allAnimals, speciesFilter, breedOptions]);
+
   const filteredAnimals = useMemo(() => {
     return allAnimals.filter((animal) => {
       const matchesSearch =
@@ -49,46 +117,69 @@ export function AnimalsProvider({ children }) {
       const matchesSpecies =
         speciesFilter === "" || animal.especie === speciesFilter;
 
-      return matchesSearch && matchesSpecies;
+      const matchesBreed =
+        breedFilter === "" || animal.raza === breedFilter;
+
+      const matchesState =
+        stateFilter === "" || animal.estado === stateFilter;
+
+      const matchesCorral =
+        corralFilter === "" || animal.loteCorral === corralFilter;
+
+      return (
+        matchesSearch &&
+        matchesSpecies &&
+        matchesBreed &&
+        matchesState &&
+        matchesCorral
+      );
     });
-  }, [allAnimals, searchTerm, speciesFilter]);
+  }, [
+    allAnimals,
+    searchTerm,
+    speciesFilter,
+    breedFilter,
+    stateFilter,
+    corralFilter,
+  ]);
 
   const visibleAnimals = useMemo(() => {
-    return filteredAnimals.slice(0, visibleCount);
-  }, [filteredAnimals, visibleCount]);
+    return filteredAnimals.slice(0, itemsPerPage);
+  }, [filteredAnimals, itemsPerPage]);
 
-  const loadMore = () => {
-    setVisibleCount((prev) => prev + PAGE_SIZE);
+  const addAnimal = (newAnimal) => {
+    setAllAnimals((prevAnimals) => [...prevAnimals, newAnimal]);
   };
-
-  const resetPagination = () => {
-    setVisibleCount(PAGE_SIZE);
-  };
-
-  const handleSearchChange = (value) => {
-    setSearchTerm(value);
-    resetPagination();
-  };
-
-  const handleSpeciesFilterChange = (value) => {
-    setSpeciesFilter(value);
-    resetPagination();
-  };
-
-  const hasMore = visibleCount < filteredAnimals.length;
 
   const value = {
     allAnimals,
     visibleAnimals,
-    filteredAnimals,
     loading,
     error,
+
     searchTerm,
     speciesFilter,
+    breedFilter,
+    stateFilter,
+    corralFilter,
+    itemsPerPage,
+
     setSearchTerm: handleSearchChange,
     setSpeciesFilter: handleSpeciesFilterChange,
-    loadMore,
-    hasMore,
+    setBreedFilter: handleBreedFilterChange,
+    setStateFilter: handleStateFilterChange,
+    setCorralFilter: handleCorralFilterChange,
+    setItemsPerPage: handleItemsPerPageChange,
+
+    speciesOptions,
+    breedOptions,
+    filteredBreedOptions,
+    stateOptions,
+    corralOptions,
+
+    clearFilters,
+    addAnimal,
+
     totalAnimals: allAnimals.length,
     totalFilteredAnimals: filteredAnimals.length,
   };

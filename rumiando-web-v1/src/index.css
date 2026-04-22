@@ -638,6 +638,119 @@ p {
   color: var(--color-primary);
 }
 
+.weather-section {
+  margin-top: 150px;
+  margin-bottom: 40px;
+}
+
+.weather-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  padding: 40px;
+  overflow: hidden;
+}
+
+.weather-card-good {
+  background: linear-gradient(135deg, rgba(63, 107, 75, 0.08), #ffffff);
+}
+
+.weather-card-warning {
+  background: linear-gradient(135deg, rgba(207, 174, 106, 0.16), #ffffff);
+}
+
+.weather-card-neutral {
+  background: linear-gradient(135deg, rgba(95, 111, 99, 0.10), #ffffff);
+}
+
+.weather-card-bad,
+.weather-card-error {
+  background: linear-gradient(135deg, rgba(179, 58, 58, 0.08), #ffffff);
+}
+
+.weather-card-header {
+  margin-bottom: 14px;
+}
+
+.weather-kicker {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-primary);
+}
+
+.weather-card h2 {
+  margin: 0 0 8px;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  line-height: 1.05;
+}
+
+.weather-location {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--color-text);
+}
+
+.weather-recommendation {
+  margin-top: 24px;
+  margin-bottom: 32px;
+  max-width: 900px;
+  line-height: 1.7;
+  font-size: 1.08rem;
+}
+
+.weather-days-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 22px;
+  align-items: stretch;
+}
+
+.weather-day {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 26px 22px;
+  min-height: 100%;
+}
+
+.weather-day h3 {
+  margin: 0 0 18px;
+  font-size: 1.15rem;
+}
+
+.weather-day p {
+  margin: 0 0 10px;
+  line-height: 1.6;
+}
+
+.weather-day p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .weather-section {
+    margin-top: 120px;
+  }
+
+  .weather-card {
+    padding: 28px 22px;
+  }
+
+  .weather-recommendation {
+    margin-bottom: 24px;
+  }
+
+  .weather-days-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 /* RESPONSIVE */
 @media (max-width: 900px) {
   .services-container {
@@ -751,4 +864,5 @@ p {
   .hero-images {
     min-height: auto;
   }
+
 }
