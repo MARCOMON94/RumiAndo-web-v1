@@ -1,0 +1,19 @@
+Tiempos de desarrollo
+
+- Creación del proyecto y configuración inicial con React + Vite: 10 min
+- Organización inicial de carpetas, archivos y primera subida al repositorio: 35 min
+- Preparación, revisión y adaptación de los datos JSON iniciales: 1 h 35 min
+- Modelado de la estructura de especies, razas y contenido base: 1 h 10 min
+- Implementación del sistema de obtención y lectura de datos: 1 h 20 min
+- Desarrollo del filtro o barra de búsqueda: 1 h 25 min
+- Construcción de la Home: 1 h 35 min
+- Construcción de la página de Contacto: 1 h 10 min
+- Correcciones y refactor de ContactPage: 45 min
+- Estilos generales de la aplicación: 1 h 20 min
+- Ajustes de estilos por módulos y componentes: 1 h 10 min
+- Responsive para móvil, tablet y escritorio: 1 h 40 min
+- Configuración del deploy y ajustes con Netlify: 45 min
+- Integración de una API externa con Context y fetch: 1 h 35 min
+- Gestión del loading y tratamiento de errores de la API: 50 min
+- Pruebas unitarias básicas: 1 h 15 min
+- Revisión final del proyecto y corrección de detalles: 1 h
