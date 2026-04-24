@@ -17,3 +17,6 @@ Tiempos de desarrollo
 - Gestión del loading y tratamiento de errores de la API: 50 min
 - Pruebas unitarias básicas: 1 h 15 min
 - Revisión final del proyecto y corrección de detalles: 1 h
+- Implementación de la ruta dinámica para el detalle individual de cada animal (`/animal/:id`): 35 min
+- Configuración del entorno de pruebas unitarias con Vitest, Testing Library y archivos de setup: 25 min
+- Ajustes de accesibilidad y correcciones sobre componentes para validación correcta de tests: 1 h 20 min
