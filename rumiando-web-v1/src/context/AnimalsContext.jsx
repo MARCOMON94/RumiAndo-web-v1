@@ -17,6 +17,11 @@ export function AnimalsProvider({ children }) {
   const [breedFilter, setBreedFilter] = useState("");
   const [stateFilter, setStateFilter] = useState("");
   const [corralFilter, setCorralFilter] = useState("");
+  const [sexFilter, setSexFilter] = useState("");
+  const [healthFilter, setHealthFilter] = useState("");
+  const [reproductiveFilter, setReproductiveFilter] = useState("");
+  const [productiveFilter, setProductiveFilter] = useState("");
+  const [dryFilter, setDryFilter] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -66,6 +71,26 @@ export function AnimalsProvider({ children }) {
     setCorralFilter(value);
   };
 
+  const handleSexFilterChange = (value) => {
+    setSexFilter(value);
+  };
+
+  const handleHealthFilterChange = (value) => {
+    setHealthFilter(value);
+  };
+
+  const handleReproductiveFilterChange = (value) => {
+    setReproductiveFilter(value);
+  };
+
+  const handleProductiveFilterChange = (value) => {
+    setProductiveFilter(value);
+  };
+
+  const handleDryFilterChange = (value) => {
+    setDryFilter(value);
+  };
+
   const handleItemsPerPageChange = (value) => {
     setItemsPerPage(Number(value));
   };
@@ -76,23 +101,31 @@ export function AnimalsProvider({ children }) {
     setBreedFilter("");
     setStateFilter("");
     setCorralFilter("");
+    setSexFilter("");
+    setHealthFilter("");
+    setReproductiveFilter("");
+    setProductiveFilter("");
+    setDryFilter("");
   };
 
-  const speciesOptions = useMemo(() => {
-    return [...new Set(allAnimals.map((animal) => animal.especie).filter(Boolean))];
-  }, [allAnimals]);
+  const getUniqueOptions = (field) => {
+    return [...new Set(allAnimals.map((animal) => animal[field]).filter(Boolean))];
+  };
 
-  const breedOptions = useMemo(() => {
-    return [...new Set(allAnimals.map((animal) => animal.raza).filter(Boolean))];
-  }, [allAnimals]);
-
-  const stateOptions = useMemo(() => {
-    return [...new Set(allAnimals.map((animal) => animal.estado).filter(Boolean))];
-  }, [allAnimals]);
-
-  const corralOptions = useMemo(() => {
-    return [...new Set(allAnimals.map((animal) => animal.loteCorral).filter(Boolean))];
-  }, [allAnimals]);
+  const speciesOptions = useMemo(() => getUniqueOptions("especie"), [allAnimals]);
+  const breedOptions = useMemo(() => getUniqueOptions("raza"), [allAnimals]);
+  const stateOptions = useMemo(() => getUniqueOptions("estado"), [allAnimals]);
+  const corralOptions = useMemo(() => getUniqueOptions("loteCorral"), [allAnimals]);
+  const sexOptions = useMemo(() => getUniqueOptions("sexo"), [allAnimals]);
+  const healthOptions = useMemo(() => getUniqueOptions("estadoSanitario"), [allAnimals]);
+  const reproductiveOptions = useMemo(
+    () => getUniqueOptions("estadoReproductivo"),
+    [allAnimals]
+  );
+  const productiveOptions = useMemo(
+    () => getUniqueOptions("destinoProductivo"),
+    [allAnimals]
+  );
 
   const filteredBreedOptions = useMemo(() => {
     if (!speciesFilter) return breedOptions;
@@ -126,12 +159,36 @@ export function AnimalsProvider({ children }) {
       const matchesCorral =
         corralFilter === "" || animal.loteCorral === corralFilter;
 
+      const matchesSex =
+        sexFilter === "" || animal.sexo === sexFilter;
+
+      const matchesHealth =
+        healthFilter === "" || animal.estadoSanitario === healthFilter;
+
+      const matchesReproductive =
+        reproductiveFilter === "" ||
+        animal.estadoReproductivo === reproductiveFilter;
+
+      const matchesProductive =
+        productiveFilter === "" ||
+        animal.destinoProductivo === productiveFilter;
+
+      const matchesDry =
+        dryFilter === "" ||
+        (dryFilter === "Sí" && animal.secado === true) ||
+        (dryFilter === "No" && animal.secado === false);
+
       return (
         matchesSearch &&
         matchesSpecies &&
         matchesBreed &&
         matchesState &&
-        matchesCorral
+        matchesCorral &&
+        matchesSex &&
+        matchesHealth &&
+        matchesReproductive &&
+        matchesProductive &&
+        matchesDry
       );
     });
   }, [
@@ -141,6 +198,11 @@ export function AnimalsProvider({ children }) {
     breedFilter,
     stateFilter,
     corralFilter,
+    sexFilter,
+    healthFilter,
+    reproductiveFilter,
+    productiveFilter,
+    dryFilter,
   ]);
 
   const visibleAnimals = useMemo(() => {
@@ -148,7 +210,7 @@ export function AnimalsProvider({ children }) {
   }, [filteredAnimals, itemsPerPage]);
 
   const addAnimal = (newAnimal) => {
-    setAllAnimals((prevAnimals) => [...prevAnimals, newAnimal]);
+    setAllAnimals((prevAnimals) => [newAnimal, ...prevAnimals]);
   };
 
   const value = {
@@ -162,6 +224,11 @@ export function AnimalsProvider({ children }) {
     breedFilter,
     stateFilter,
     corralFilter,
+    sexFilter,
+    healthFilter,
+    reproductiveFilter,
+    productiveFilter,
+    dryFilter,
     itemsPerPage,
 
     setSearchTerm: handleSearchChange,
@@ -169,6 +236,11 @@ export function AnimalsProvider({ children }) {
     setBreedFilter: handleBreedFilterChange,
     setStateFilter: handleStateFilterChange,
     setCorralFilter: handleCorralFilterChange,
+    setSexFilter: handleSexFilterChange,
+    setHealthFilter: handleHealthFilterChange,
+    setReproductiveFilter: handleReproductiveFilterChange,
+    setProductiveFilter: handleProductiveFilterChange,
+    setDryFilter: handleDryFilterChange,
     setItemsPerPage: handleItemsPerPageChange,
 
     speciesOptions,
@@ -176,6 +248,10 @@ export function AnimalsProvider({ children }) {
     filteredBreedOptions,
     stateOptions,
     corralOptions,
+    sexOptions,
+    healthOptions,
+    reproductiveOptions,
+    productiveOptions,
 
     clearFilters,
     addAnimal,

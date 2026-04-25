@@ -1,69 +1,27 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-
-const initialState = {
-  fullName: "",
-  email: "",
-  phone: "",
-  message: "",
-};
+import { useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 function ContactPage() {
-  const [searchParams] = useSearchParams();
-  const [formData, setFormData] = useState(initialState);
+  const location = useLocation();
+
+  const prefilledEmail = useMemo(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get("email") || "";
+  }, [location.search]);
+
+  const [formData, setFormData] = useState({
+    nombre: "",
+    email: prefilledEmail,
+    telefono: "",
+    empresa: "",
+    trabajadores: "",
+    tipoEntidad: "",
+    tipoConsulta: "",
+    mensaje: "",
+  });
+
   const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    const emailFromQuery = searchParams.get("email");
-
-    if (emailFromQuery) {
-      setFormData((prev) => ({
-        ...prev,
-        email: emailFromQuery,
-      }));
-    }
-  }, [searchParams]);
-
-  const validateField = (name, value) => {
-    const trimmedValue = value.trim();
-
-    if (name === "fullName" && trimmedValue === "") {
-      return "Por favor, completa el campo NOMBRE con tu nombre";
-    }
-
-    if (name === "email") {
-      if (
-        trimmedValue === "" ||
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedValue)
-      ) {
-        return "Correo electrónico no válido";
-      }
-    }
-
-    if (name === "phone" && trimmedValue === "") {
-      return "Por favor, introduce tu número de teléfono";
-    }
-
-    if (name === "message" && trimmedValue === "") {
-      return "";
-    }
-
-    return null;
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    Object.entries(formData).forEach(([name, value]) => {
-      const error = validateField(name, value);
-
-      if (error !== null) {
-        newErrors[name] = error;
-      }
-    });
-
-    return newErrors;
-  };
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -73,22 +31,36 @@ function ContactPage() {
       [name]: value,
     }));
 
-    const liveError = validateField(name, value);
-
     setErrors((prev) => ({
       ...prev,
-      [name]: liveError === null ? undefined : liveError,
+      [name]: "",
     }));
   };
 
-  const handleBlur = (event) => {
-    const { name, value } = event.target;
-    const blurError = validateField(name, value);
+  const validateForm = () => {
+    const newErrors = {};
 
-    setErrors((prev) => ({
-      ...prev,
-      [name]: blurError === null ? undefined : blurError,
-    }));
+    if (!formData.nombre.trim()) {
+      newErrors.nombre = "Introduce tu nombre o responsable de contacto.";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Introduce un correo electrónico.";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Introduce un correo electrónico válido.";
+    }
+
+    if (!formData.tipoConsulta.trim()) {
+      newErrors.tipoConsulta = "Selecciona el tipo de consulta.";
+    }
+
+    if (!formData.mensaje.trim()) {
+      newErrors.mensaje = "Escribe un breve mensaje.";
+    } else if (formData.mensaje.trim().length < 15) {
+      newErrors.mensaje = "El mensaje es demasiado corto.";
+    }
+
+    return newErrors;
   };
 
   const handleSubmit = (event) => {
@@ -97,109 +69,283 @@ function ContactPage() {
     const validationErrors = validateForm();
     setErrors(validationErrors);
 
-    if (Object.keys(validationErrors).length > 0) return;
+    if (Object.keys(validationErrors).length > 0) {
+      setIsSubmitted(false);
+      return;
+    }
 
-    console.log("Formulario enviado:", {
-      fullName: formData.fullName.trim(),
-      email: formData.email.trim(),
-      phone: formData.phone.trim(),
-      message: formData.message.trim(),
-    });
-
-    alert("Formulario enviado correctamente");
+    setIsSubmitted(true);
 
     setFormData({
-      ...initialState,
-      email: searchParams.get("email") || "",
+      nombre: "",
+      email: "",
+      telefono: "",
+      empresa: "",
+      trabajadores: "",
+      tipoEntidad: "",
+      tipoConsulta: "",
+      mensaje: "",
     });
-
-    setErrors({});
   };
 
+  const inputStyle = (fieldName) => ({
+    width: "100%",
+    border: errors[fieldName] ? "1px solid #b33a3a" : "1px solid #d9d3c4",
+    outline: "none",
+    backgroundColor: "#ffffff",
+    padding: "14px 16px",
+    fontSize: "0.96rem",
+    color: "#233127",
+    fontFamily: "inherit",
+    borderRadius: "12px",
+  });
+
   return (
-    <section className="contact-page">
-      <h1>Contáctanos</h1>
+    <main style={{ padding: "20px" }}>
+      <section style={{ marginBottom: "28px" }}>
+        <h1 style={{ marginBottom: "12px" }}>Solicitar información</h1>
+        <p style={{ maxWidth: "68ch", lineHeight: "1.75" }}>
+          Esta sección está pensada para simular una solicitud de información o
+          presupuesto sobre RumiAndo. Puedes indicar el tipo de entidad, el tipo
+          de consulta y los datos básicos necesarios para valorar una posible
+          implantación o demo.
+        </p>
+      </section>
 
-      <form className="contact-form" onSubmit={handleSubmit} noValidate>
-        <div className="form-group full-width">
-          <label htmlFor="fullName">
-            Nombre completo <span className="required-mark">*</span>
-          </label>
-          <input
-            type="text"
-            id="fullName"
-            name="fullName"
-            placeholder="Introduce tu nombre completo"
-            value={formData.fullName}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={errors.fullName !== undefined ? "input-error" : ""}
-          />
-          {errors.fullName && (
-            <p className="error-message">{errors.fullName}</p>
-          )}
-        </div>
+      <section
+        style={{
+          backgroundColor: "#ffffff",
+          border: "1px solid #d9d3c4",
+          borderRadius: "20px",
+          padding: "24px",
+          boxShadow: "0 10px 28px rgba(35, 49, 39, 0.08)",
+        }}
+      >
+        <h2 style={{ fontSize: "1.45rem", marginBottom: "18px" }}>
+          Formulario de contacto
+        </h2>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="email">
-              Correo electrónico <span className="required-mark">*</span>
+        {isSubmitted && (
+          <div
+            style={{
+              marginBottom: "18px",
+              padding: "14px 16px",
+              borderRadius: "12px",
+              backgroundColor: "#dbe8dc",
+              border: "1px solid #c7d8c8",
+              color: "#233127",
+              fontWeight: 600,
+            }}
+          >
+            Solicitud registrada en la demo. En una versión real, aquí se enviaría
+            el formulario a un backend o CRM.
+          </div>
+        )}
+
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gap: "16px",
+          }}
+        >
+          <div>
+            <label
+              htmlFor="nombre"
+              style={{ display: "block", marginBottom: "6px", fontWeight: 700 }}
+            >
+              Nombre / responsable
             </label>
             <input
-              type="email"
+              id="nombre"
+              name="nombre"
+              type="text"
+              value={formData.nombre}
+              onChange={handleChange}
+              placeholder="Ej. Marco Monzón"
+              style={inputStyle("nombre")}
+            />
+            {errors.nombre && (
+              <p style={{ marginTop: "6px", color: "#b33a3a", fontSize: "0.88rem" }}>
+                {errors.nombre}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="email"
+              style={{ display: "block", marginBottom: "6px", fontWeight: 700 }}
+            >
+              Correo electrónico
+            </label>
+            <input
               id="email"
               name="email"
-              placeholder="Introduce tu correo electrónico"
+              type="email"
               value={formData.email}
               onChange={handleChange}
-              onBlur={handleBlur}
-              className={errors.email !== undefined ? "input-error" : ""}
+              placeholder="correo@ejemplo.com"
+              style={inputStyle("email")}
             />
-            {errors.email && <p className="error-message">{errors.email}</p>}
+            {errors.email && (
+              <p style={{ marginTop: "6px", color: "#b33a3a", fontSize: "0.88rem" }}>
+                {errors.email}
+              </p>
+            )}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="phone">
-              Teléfono <span className="required-mark">*</span>
+          <div>
+            <label
+              htmlFor="telefono"
+              style={{ display: "block", marginBottom: "6px", fontWeight: 700 }}
+            >
+              Teléfono
             </label>
             <input
+              id="telefono"
+              name="telefono"
               type="text"
-              id="phone"
-              name="phone"
-              placeholder="Introduce tu número de teléfono"
-              value={formData.phone}
+              value={formData.telefono}
               onChange={handleChange}
-              onBlur={handleBlur}
-              className={errors.phone !== undefined ? "input-error" : ""}
+              placeholder="Ej. 600123123"
+              style={inputStyle("telefono")}
             />
-            {errors.phone && <p className="error-message">{errors.phone}</p>}
           </div>
-        </div>
 
-        <div className="form-group full-width">
-          <label htmlFor="message">
-            Mensaje <span className="required-mark">*</span>
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            rows="8"
-            placeholder="Escribe aquí tu mensaje..."
-            value={formData.message}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={errors.message !== undefined ? "input-error" : ""}
-          ></textarea>
-          {errors.message && (
-            <p className="error-message">{errors.message}</p>
-          )}
-        </div>
+          <div>
+            <label
+              htmlFor="empresa"
+              style={{ display: "block", marginBottom: "6px", fontWeight: 700 }}
+            >
+              Empresa / explotación
+            </label>
+            <input
+              id="empresa"
+              name="empresa"
+              type="text"
+              value={formData.empresa}
+              onChange={handleChange}
+              placeholder="Nombre de empresa o explotación"
+              style={inputStyle("empresa")}
+            />
+          </div>
 
-        <button type="submit" className="btn-primary submit-btn">
-          Enviar
-        </button>
-      </form>
-    </section>
+          <div>
+            <label
+              htmlFor="trabajadores"
+              style={{ display: "block", marginBottom: "6px", fontWeight: 700 }}
+            >
+              Nº de trabajadores
+            </label>
+            <input
+              id="trabajadores"
+              name="trabajadores"
+              type="number"
+              min="1"
+              value={formData.trabajadores}
+              onChange={handleChange}
+              placeholder="Ej. 5"
+              style={inputStyle("trabajadores")}
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="tipoEntidad"
+              style={{ display: "block", marginBottom: "6px", fontWeight: 700 }}
+            >
+              Tipo de entidad
+            </label>
+            <select
+              id="tipoEntidad"
+              name="tipoEntidad"
+              value={formData.tipoEntidad}
+              onChange={handleChange}
+              style={inputStyle("tipoEntidad")}
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="Explotación ganadera">Explotación ganadera</option>
+              <option value="Empresa agroganadera">Empresa agroganadera</option>
+              <option value="Veterinaria / asesoría">Veterinaria / asesoría</option>
+              
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label
+              htmlFor="tipoConsulta"
+              style={{ display: "block", marginBottom: "6px", fontWeight: 700 }}
+            >
+              Tipo de consulta
+            </label>
+            <select
+              id="tipoConsulta"
+              name="tipoConsulta"
+              value={formData.tipoConsulta}
+              onChange={handleChange}
+              style={inputStyle("tipoConsulta")}
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="Solicitar presupuesto">Solicitar presupuesto</option>
+              <option value="Solicitar demo">Solicitar demo</option>
+              <option value="Más información">Más información</option>
+              <option value="Consulta técnica">Consulta técnica</option>
+              <option value="Colaboración">Colaboración</option>
+            </select>
+            {errors.tipoConsulta && (
+              <p style={{ marginTop: "6px", color: "#b33a3a", fontSize: "0.88rem" }}>
+                {errors.tipoConsulta}
+              </p>
+            )}
+          </div>
+
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label
+              htmlFor="mensaje"
+              style={{ display: "block", marginBottom: "6px", fontWeight: 700 }}
+            >
+              Mensaje
+            </label>
+            <textarea
+              id="mensaje"
+              name="mensaje"
+              value={formData.mensaje}
+              onChange={handleChange}
+              placeholder="Describe brevemente qué necesitas, el tipo de explotación o el objetivo de la consulta"
+              style={{
+                ...inputStyle("mensaje"),
+                minHeight: "160px",
+                resize: "vertical",
+              }}
+            />
+            {errors.mensaje && (
+              <p style={{ marginTop: "6px", color: "#b33a3a", fontSize: "0.88rem" }}>
+                {errors.mensaje}
+              </p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            style={{
+              gridColumn: "1 / -1",
+              padding: "14px 18px",
+              border: "none",
+              borderRadius: "12px",
+              backgroundColor: "#3f6b4b",
+              color: "#ffffff",
+              fontWeight: 700,
+              cursor: "pointer",
+            }}
+          >
+            Enviar solicitud
+          </button>
+        </form>
+      </section>
+    </main>
   );
 }
 
