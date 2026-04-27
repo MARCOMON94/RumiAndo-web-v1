@@ -6,6 +6,10 @@ function MainLayout() {
 
   const closeMenu = () => setMenuOpen(false);
 
+  const toggleMenu = () => {
+    setMenuOpen((prev) => !prev);
+  };
+
   return (
     <div className="site-shell">
       <header className="header">
@@ -15,17 +19,22 @@ function MainLayout() {
           </NavLink>
 
           <button
+            type="button"
             className={`menu-toggle ${menuOpen ? "is-open" : ""}`}
-            aria-label="Abrir navegación"
+            aria-label={menuOpen ? "Cerrar navegación" : "Abrir navegación"}
             aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-controls="main-navigation"
+            onClick={toggleMenu}
           >
             <span></span>
             <span></span>
             <span></span>
           </button>
 
-          <div className={`nav-menu ${menuOpen ? "is-open" : ""}`}>
+          <div
+            id="main-navigation"
+            className={`nav-menu ${menuOpen ? "is-open" : ""}`}
+          >
             <ul className="nav-links">
               <li>
                 <NavLink to="/" onClick={closeMenu}>
@@ -39,7 +48,11 @@ function MainLayout() {
               </li>
             </ul>
 
-            <NavLink to="/contacto" className="contact-btn" onClick={closeMenu}>
+            <NavLink
+              to="/contacto"
+              className="contact-btn"
+              onClick={closeMenu}
+            >
               Contáctanos
             </NavLink>
           </div>

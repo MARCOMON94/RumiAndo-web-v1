@@ -35,8 +35,14 @@ function AnimalsFilters({
       </div>
 
       <div style={{ gridColumn: "1 / -1" }}>
-        <label style={{ display: "block", marginBottom: "6px" }}>Búsqueda</label>
+        <label
+          htmlFor="searchTerm"
+          style={{ display: "block", marginBottom: "6px" }}
+        >
+          Búsqueda
+        </label>
         <input
+          id="searchTerm"
           type="text"
           placeholder="Buscar por crotal, especie o raza"
           value={searchTerm}
@@ -51,8 +57,14 @@ function AnimalsFilters({
       </div>
 
       <div>
-        <label style={{ display: "block", marginBottom: "6px" }}>Especie</label>
+        <label
+          htmlFor="speciesFilter"
+          style={{ display: "block", marginBottom: "6px" }}
+        >
+          Especie
+        </label>
         <select
+          id="speciesFilter"
           value={speciesFilter}
           onChange={(e) => setSpeciesFilter(e.target.value)}
           style={{
@@ -72,8 +84,14 @@ function AnimalsFilters({
       </div>
 
       <div>
-        <label style={{ display: "block", marginBottom: "6px" }}>Raza</label>
+        <label
+          htmlFor="breedFilter"
+          style={{ display: "block", marginBottom: "6px" }}
+        >
+          Raza
+        </label>
         <select
+          id="breedFilter"
           value={breedFilter}
           onChange={(e) => setBreedFilter(e.target.value)}
           disabled={!speciesFilter}
@@ -94,8 +112,14 @@ function AnimalsFilters({
       </div>
 
       <div>
-        <label style={{ display: "block", marginBottom: "6px" }}>Estado</label>
+        <label
+          htmlFor="stateFilter"
+          style={{ display: "block", marginBottom: "6px" }}
+        >
+          Estado
+        </label>
         <select
+          id="stateFilter"
           value={stateFilter}
           onChange={(e) => setStateFilter(e.target.value)}
           style={{
@@ -115,8 +139,14 @@ function AnimalsFilters({
       </div>
 
       <div>
-        <label style={{ display: "block", marginBottom: "6px" }}>Corral</label>
+        <label
+          htmlFor="corralFilter"
+          style={{ display: "block", marginBottom: "6px" }}
+        >
+          Corral
+        </label>
         <select
+          id="corralFilter"
           value={corralFilter}
           onChange={(e) => setCorralFilter(e.target.value)}
           style={{
@@ -136,8 +166,14 @@ function AnimalsFilters({
       </div>
 
       <div>
-        <label style={{ display: "block", marginBottom: "6px" }}>Mostrar</label>
+        <label
+          htmlFor="itemsPerPage"
+          style={{ display: "block", marginBottom: "6px" }}
+        >
+          Mostrar
+        </label>
         <select
+          id="itemsPerPage"
           value={itemsPerPage}
           onChange={(e) => setItemsPerPage(e.target.value)}
           style={{
