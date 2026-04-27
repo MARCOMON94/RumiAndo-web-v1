@@ -38,45 +38,45 @@ function HomePage() {
   return (
     <>
       <section className="hero hero-commercial section-container">
-        <div className="hero-headline">
-          <span className="hero-kicker">Gestión ganadera digital</span>
+  <div className="hero-headline">
+    <span className="hero-kicker">Gestión ganadera digital</span>
 
-          <h1>RumiAndo, una forma más clara de organizar tu explotación</h1>
-        </div>
+    <h1>RumiAndo, una forma más clara de organizar tu explotación</h1>
 
-        <div className="hero-copy">
-          <p>
-            Una demo funcional pensada para mostrar una app de gestión ganadera
-            para la consulta rápida de animales, movimientos dentro de la granja,
-            la visualización clara de información y consejos basados en esta,
-            útil para el manejo diario.
-          </p>
+    <div className="hero-inline-image">
+      <div className="hero-photo-card hero-photo-main">
+        <img
+          src="/images/home/hero-livestock.png"
+          alt="Ganado en una explotación"
+        />
+      </div>
+    </div>
+  </div>
 
-          <div className="hero-buttons">
-            <Link to="/contacto" className="btn-primary">
-              Solicitar información
-            </Link>
-            <Link to="/censo" className="btn-secondary">
-              Ver demo del censo
-            </Link>
-          </div>
+  <div className="hero-copy">
+    <p>
+      Una demo funcional pensada para mostrar una app de gestión ganadera
+      para la consulta rápida de animales, movimientos dentro de la granja,
+      la visualización clara de información y consejos basados en esta,
+      útil para el manejo diario.
+    </p>
 
-          <ul className="hero-highlights">
-            <li>Censo visual con filtros y fichas individuales</li>
-            <li>Alta simulada de animales dentro de la sesión</li>
-            <li>Gráficas y bloques resumen a partir de datos del censo</li>
-          </ul>
-        </div>
+    <div className="hero-buttons">
+      <Link to="/contacto" className="btn-primary">
+        Solicitar información
+      </Link>
+      <Link to="/censo" className="btn-secondary">
+        Ver demo del censo
+      </Link>
+    </div>
 
-        <div className="hero-images hero-images-commercial">
-          <div className="hero-photo-card hero-photo-main">
-            <img
-              src="/images/home/hero-livestock.png"
-              alt="Ganado en una explotación"
-            />
-          </div>
-        </div>
-      </section>
+    <ul className="hero-highlights">
+      <li>Censo visual con filtros y fichas individuales</li>
+      <li>Alta simulada de animales dentro de la sesión</li>
+      <li>Gráficas y bloques resumen a partir de datos del censo</li>
+    </ul>
+  </div>
+</section>
 
       <section className="home-section section-container">
         <div className="section-heading section-heading-wide">

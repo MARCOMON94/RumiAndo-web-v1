@@ -5,11 +5,13 @@ import App from "./App.jsx";
 import { AnimalsProvider } from "./context/AnimalsContext.jsx";
 import { WeatherProvider } from "./context/WeatherContext.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
+      <ScrollToTop />
       <AnimalsProvider>
         <WeatherProvider>
           <ErrorBoundary>

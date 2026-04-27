@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import AnimalsFilters from "./AnimalsFilters";
 import { vi } from "vitest";
+import AnimalsFilters from "./AnimalsFilters";
 
 describe("AnimalsFilters", () => {
   const defaultProps = {
@@ -13,7 +13,6 @@ describe("AnimalsFilters", () => {
     healthFilter: "",
     reproductiveFilter: "",
     productiveFilter: "",
-    dryFilter: "",
     itemsPerPage: 10,
 
     setSearchTerm: vi.fn(),
@@ -25,7 +24,6 @@ describe("AnimalsFilters", () => {
     setHealthFilter: vi.fn(),
     setReproductiveFilter: vi.fn(),
     setProductiveFilter: vi.fn(),
-    setDryFilter: vi.fn(),
     setItemsPerPage: vi.fn(),
 
     speciesOptions: ["Ovino", "Caprino"],
@@ -49,6 +47,15 @@ describe("AnimalsFilters", () => {
     expect(defaultProps.setSpeciesFilter).toHaveBeenCalledWith("Caprino");
   });
 
+  test("llama a setProductiveFilter cuando cambia el destino productivo", () => {
+    render(<AnimalsFilters {...defaultProps} />);
+
+    const productiveSelect = screen.getByLabelText(/destino productivo/i);
+    fireEvent.change(productiveSelect, { target: { value: "Carne" } });
+
+    expect(defaultProps.setProductiveFilter).toHaveBeenCalledWith("Carne");
+  });
+
   test("llama a clearFilters al pulsar limpiar filtros", () => {
     render(<AnimalsFilters {...defaultProps} />);
 
@@ -59,14 +66,5 @@ describe("AnimalsFilters", () => {
     fireEvent.click(clearButton);
 
     expect(defaultProps.clearFilters).toHaveBeenCalled();
-  });
-
-  test("llama a setDryFilter cuando cambia el filtro de secado", () => {
-    render(<AnimalsFilters {...defaultProps} />);
-
-    const drySelect = screen.getByLabelText(/secado/i);
-    fireEvent.change(drySelect, { target: { value: "Sí" } });
-
-    expect(defaultProps.setDryFilter).toHaveBeenCalledWith("Sí");
   });
 });

@@ -8,7 +8,6 @@ function AnimalsFilters({
   healthFilter,
   reproductiveFilter,
   productiveFilter,
-  dryFilter,
   itemsPerPage,
   setSearchTerm,
   setSpeciesFilter,
@@ -19,7 +18,6 @@ function AnimalsFilters({
   setHealthFilter,
   setReproductiveFilter,
   setProductiveFilter,
-  setDryFilter,
   setItemsPerPage,
   speciesOptions,
   filteredBreedOptions,
@@ -229,22 +227,6 @@ function AnimalsFilters({
               {option}
             </option>
           ))}
-        </select>
-      </div>
-
-      <div>
-        <label htmlFor="dryFilter" style={labelStyle}>
-          Secado
-        </label>
-        <select
-          id="dryFilter"
-          value={dryFilter}
-          onChange={(e) => setDryFilter(e.target.value)}
-          style={selectStyle}
-        >
-          <option value="">Todos</option>
-          <option value="Sí">Sí</option>
-          <option value="No">No</option>
         </select>
       </div>
 

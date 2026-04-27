@@ -21,7 +21,7 @@ function AnimalsPage() {
     healthFilter,
     reproductiveFilter,
     productiveFilter,
-    dryFilter,
+    
     itemsPerPage,
 
     setSearchTerm,
@@ -33,7 +33,7 @@ function AnimalsPage() {
     setHealthFilter,
     setReproductiveFilter,
     setProductiveFilter,
-    setDryFilter,
+    
     setItemsPerPage,
 
     speciesOptions,
@@ -79,9 +79,7 @@ function AnimalsPage() {
     return allAnimals.filter((animal) => animal.estado === "Activa").length;
   }, [allAnimals]);
 
-  const driedAnimals = useMemo(() => {
-    return allAnimals.filter((animal) => animal.secado === true).length;
-  }, [allAnimals]);
+  
 
   const withSanitaryRecords = useMemo(() => {
     return allAnimals.filter(
@@ -316,7 +314,7 @@ function AnimalsPage() {
             healthFilter={healthFilter}
             reproductiveFilter={reproductiveFilter}
             productiveFilter={productiveFilter}
-            dryFilter={dryFilter}
+            
             itemsPerPage={itemsPerPage}
             setSearchTerm={setSearchTerm}
             setSpeciesFilter={setSpeciesFilter}
@@ -327,7 +325,7 @@ function AnimalsPage() {
             setHealthFilter={setHealthFilter}
             setReproductiveFilter={setReproductiveFilter}
             setProductiveFilter={setProductiveFilter}
-            setDryFilter={setDryFilter}
+          
             setItemsPerPage={setItemsPerPage}
             speciesOptions={speciesOptions}
             filteredBreedOptions={filteredBreedOptions}
@@ -449,11 +447,7 @@ function AnimalsPage() {
               "Animales con historial de entradas, cambios o reubicaciones"
             )}
 
-            {renderMetricCard(
-              "Animales en secado",
-              driedAnimals,
-              "Número de animales con el campo secado marcado como verdadero"
-            )}
+            
 
             {renderMetricCard(
   "Nacidos en explotación",
