@@ -264,8 +264,23 @@ function AnimalsPage() {
           }}
         >
           {renderTabButton("Censo", "censo")}
-          {renderTabButton("Añadir animal", "add")}
-          {renderTabButton("Gráficas", "charts")}
+{renderTabButton("Añadir animal", "add")}
+<button
+  type="button"
+  data-tab-trigger="charts"
+  onClick={() => setActiveView("charts")}
+  style={{
+    padding: "12px 18px",
+    borderRadius: "999px",
+    border: activeView === "charts" ? "1px solid #3f6b4b" : "1px solid #d9d3c4",
+    backgroundColor: activeView === "charts" ? "#3f6b4b" : "#ffffff",
+    color: activeView === "charts" ? "#ffffff" : "#233127",
+    fontWeight: 700,
+    cursor: "pointer",
+  }}
+>
+  Gráficas
+</button>
         </div>
       </div>
 

@@ -101,10 +101,32 @@ function ContactPage() {
   });
 
   return (
-    <main style={{ padding: "20px" }}>
-      <section style={{ marginBottom: "28px" }}>
-        <h1 style={{ marginBottom: "12px" }}>Solicitar información</h1>
-        <p style={{ maxWidth: "68ch", lineHeight: "1.75" }}>
+    <main style={{ padding: "20px 0 0" }}>
+      <section
+        style={{
+          marginBottom: "28px",
+          width: "100%",
+        }}
+      >
+        <h1
+          style={{
+            marginBottom: "12px",
+            width: "100%",
+            maxWidth: "unset",
+            lineHeight: "0.98",
+          }}
+        >
+          Solicitar información
+        </h1>
+
+        <p
+          style={{
+            width: "100%",
+            maxWidth: "unset",
+            lineHeight: "1.75",
+            margin: 0,
+          }}
+        >
           Esta sección está pensada para simular una solicitud de información o
           presupuesto sobre RumiAndo. Puedes indicar el tipo de entidad, el tipo
           de consulta y los datos básicos necesarios para valorar una posible
@@ -114,6 +136,7 @@ function ContactPage() {
 
       <section
         style={{
+          width: "100%",
           backgroundColor: "#ffffff",
           border: "1px solid #d9d3c4",
           borderRadius: "20px",
@@ -121,7 +144,14 @@ function ContactPage() {
           boxShadow: "0 10px 28px rgba(35, 49, 39, 0.08)",
         }}
       >
-        <h2 style={{ fontSize: "1.45rem", marginBottom: "18px" }}>
+        <h2
+          style={{
+            fontSize: "1.45rem",
+            marginBottom: "18px",
+            width: "100%",
+            maxWidth: "unset",
+          }}
+        >
           Formulario de contacto
         </h2>
 
@@ -148,6 +178,7 @@ function ContactPage() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
             gap: "16px",
+            width: "100%",
           }}
         >
           <div>
@@ -269,7 +300,6 @@ function ContactPage() {
               <option value="Explotación ganadera">Explotación ganadera</option>
               <option value="Empresa agroganadera">Empresa agroganadera</option>
               <option value="Veterinaria / asesoría">Veterinaria / asesoría</option>
-              
               <option value="Otro">Otro</option>
             </select>
           </div>

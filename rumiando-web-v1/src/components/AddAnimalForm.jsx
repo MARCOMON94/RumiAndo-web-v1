@@ -27,8 +27,7 @@ function AddAnimalForm() {
   const [especie, setEspecie] = useState("");
   const [raza, setRaza] = useState("");
   const [sexo, setSexo] = useState("");
-  const [fechaNacimiento, setFechaNacimiento] = useState("");
-  const [fechaAlta, setFechaAlta] = useState(today);
+  const [fechaPrincipal, setFechaPrincipal] = useState(today);
   const [madreCrotal, setMadreCrotal] = useState("");
   const [padreCrotal, setPadreCrotal] = useState("");
   const [explotacionREGA, setExplotacionREGA] = useState("");
@@ -160,7 +159,7 @@ function AddAnimalForm() {
       return;
     }
 
-    if (!crotal.trim() || !especie || !raza || !sexo || !fechaNacimiento || !fechaAlta) {
+    if (!crotal.trim() || !especie || !raza || !sexo || !fechaPrincipal) {
       setErrorMessage("Completa los campos obligatorios antes de guardar.");
       return;
     }
@@ -174,7 +173,7 @@ function AddAnimalForm() {
       return;
     }
 
-    const edadMeses = calculateAgeMonths(fechaNacimiento);
+    const edadMeses = calculateAgeMonths(fechaPrincipal);
     const edadTexto = ageTextFromMonths(edadMeses);
     const estadoReproductivo = determineReproductiveState(sexo, edadMeses);
 
@@ -188,7 +187,7 @@ function AddAnimalForm() {
       raza,
       imagenRazaUrl: RACE_IMAGE_URLS[raza] || "",
       sexo,
-      fechaNacimiento,
+      fechaNacimiento: fechaPrincipal,
       edadMeses,
       edadTexto,
       madreCrotal: madreCrotal.trim() || null,
@@ -199,13 +198,17 @@ function AddAnimalForm() {
       loteCorral: loteCorral.trim() || "Reposición",
       ubicacion: ubicacion.trim() || loteCorral.trim() || "Reposición",
       observaciones: observaciones.trim() || "Sin observaciones",
-      fechaAlta,
+      fechaAlta: fechaPrincipal,
       fechaBaja: null,
       motivoBaja: null,
       identificacionOficial: crotal.trim(),
-      origen: origen.trim() || (tipoAlta === "Nacimiento" ? "Nacida en explotación" : "Compra externa"),
+      origen:
+        origen.trim() ||
+        (tipoAlta === "Nacimiento"
+          ? "Nacida en explotación"
+          : "Compra externa"),
       destinoProductivo: destinoProductivo || "Reposición",
-      ultimaRevision: fechaAlta,
+      ultimaRevision: fechaPrincipal,
       estadoReproductivo,
       numeroParto: 0,
       fechaUltimoParto: null,
@@ -223,8 +226,7 @@ function AddAnimalForm() {
     setEspecie("");
     setRaza("");
     setSexo("");
-    setFechaNacimiento("");
-    setFechaAlta(today);
+    setFechaPrincipal(today);
     setMadreCrotal("");
     setPadreCrotal("");
     setExplotacionREGA("");
@@ -339,15 +341,8 @@ function AddAnimalForm() {
 
         <input
           type="date"
-          value={fechaNacimiento}
-          onChange={(e) => setFechaNacimiento(e.target.value)}
-          required
-        />
-
-        <input
-          type="date"
-          value={fechaAlta}
-          onChange={(e) => setFechaAlta(e.target.value)}
+          value={fechaPrincipal}
+          onChange={(e) => setFechaPrincipal(e.target.value)}
           required
         />
 
@@ -386,10 +381,7 @@ function AddAnimalForm() {
 
         <select
           value={loteCorral}
-          onChange={(e) => {
-            setLoteCorral(e.target.value);
-            setUbicacion(e.target.value);
-          }}
+          onChange={(e) => setLoteCorral(e.target.value)}
           required
         >
           <option value="">Selecciona corral / lote</option>
@@ -417,7 +409,11 @@ function AddAnimalForm() {
         <input
           type="text"
           list="madres-list"
-          placeholder={tipoAlta === "Nacimiento" ? "Madre crotal (obligatorio)" : "Madre crotal"}
+          placeholder={
+            tipoAlta === "Nacimiento"
+              ? "Madre crotal (obligatorio)"
+              : "Madre crotal"
+          }
           value={madreCrotal}
           onChange={(e) => setMadreCrotal(e.target.value)}
           required={tipoAlta === "Nacimiento"}

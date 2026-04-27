@@ -16,17 +16,33 @@ function renderHomePage() {
 }
 
 describe("HomePage", () => {
-  test("muestra el título principal", () => {
+  test("muestra el título principal actual", () => {
     renderHomePage();
 
     expect(
-      screen.getByText(/Gestiona tu explotación con una visión más clara y útil/i)
+      screen.getByRole("heading", {
+        name: /RumiAndo, una forma más clara de organizar tu explotación/i,
+      })
     ).toBeInTheDocument();
   });
 
-  test("muestra el botón de ver censo", () => {
+  test("muestra el enlace de demo del censo", () => {
     renderHomePage();
 
-    expect(screen.getByRole("link", { name: /ver censo/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /ver demo del censo/i })
+    ).toBeInTheDocument();
+  });
+
+  test("muestra el bloque de newsletter con el botón continuar", () => {
+    renderHomePage();
+
+    expect(
+      screen.getByPlaceholderText(/introduce tu email/i)
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("button", { name: /continuar/i })
+    ).toBeInTheDocument();
   });
 });
