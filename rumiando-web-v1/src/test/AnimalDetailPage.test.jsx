@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { vi } from "vitest";
-import AnimalDetailPage from "./AnimalDetailPage";
+import AnimalDetailPage from "../pages/AnimalDetailPage";
 
 const mockUseAnimals = vi.fn();
-
+ 
 vi.mock("../hooks/useAnimals", () => ({
   useAnimals: () => mockUseAnimals(),
 }));

@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import HomePage from "./HomePage";
+import HomePage from "../pages/HomePage";
 import { vi } from "vitest";
 
 vi.mock("../components/WeatherAdvisory", () => ({

@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
-import AnimalsFilters from "./AnimalsFilters";
-
+import AnimalsFilters from "../components/AnimalsFilters";
+ 
 describe("AnimalsFilters", () => {
   const defaultProps = {
     searchTerm: "",

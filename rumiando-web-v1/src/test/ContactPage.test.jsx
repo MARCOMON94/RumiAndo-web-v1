@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import ContactPage from "./ContactPage";
+import ContactPage from "../pages/ContactPage";
 
 function renderContactPage(initialEntry = "/contacto") {
   return render(
@@ -9,7 +9,7 @@ function renderContactPage(initialEntry = "/contacto") {
     </MemoryRouter>
   );
 }
-
+ 
 describe("ContactPage", () => {
   test("muestra el formulario de contacto actualizado", () => {
     renderContactPage();
