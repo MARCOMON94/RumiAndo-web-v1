@@ -1,16 +1,35 @@
-# React + Vite
+# RumiAndo web landing
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación React + Vite que sirve como landing comercial de RumiAndo.
 
-Currently, two official plugins are available:
+## Rutas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `/`: landing con propuesta de valor, funciones reales, flujo con lector, módulos y placeholders de capturas.
+- `/contacto`: contacto por `rumiando.app@gmail.com` con formulario que abre un correo `mailto:`.
 
-## React Compiler
+## Assets
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Icono oficial:
 
-## Expanding the ESLint configuration
+```txt
+public/images/brand/rumiando-sheep-tech-app-colors.png
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Placeholders reemplazables:
+
+```txt
+public/images/landing/landing-hero.png
+public/images/landing/landing-app-home.png
+public/images/landing/landing-reader-flow.png
+public/images/landing/landing-analytics.png
+public/images/landing/landing-mobile.png
+```
+
+## Scripts
+
+```bash
+npm run dev
+npm run lint
+npm run test:run
+npm run build
+```

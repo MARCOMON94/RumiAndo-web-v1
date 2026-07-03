@@ -1,6 +1,7 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import ContactPage from "../pages/ContactPage";
+import { afterEach, describe, expect, test, vi } from "vitest";
+import ContactPage, { CONTACT_EMAIL } from "../pages/ContactPage";
 
 function renderContactPage(initialEntry = "/contacto") {
   return render(
@@ -9,89 +10,77 @@ function renderContactPage(initialEntry = "/contacto") {
     </MemoryRouter>
   );
 }
- 
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
 describe("ContactPage", () => {
-  test("muestra el formulario de contacto actualizado", () => {
+  test("muestra el Gmail oficial y el formulario de contacto", () => {
     renderContactPage();
 
     expect(
-      screen.getByRole("heading", { name: /solicitar información/i })
+      screen.getByRole("heading", { name: /Cuéntanos qué necesitas de RumiAndo/i })
     ).toBeInTheDocument();
 
-    expect(
-      screen.getByLabelText(/nombre \/ responsable/i)
-    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: CONTACT_EMAIL })).toHaveAttribute(
+      "href",
+      `mailto:${CONTACT_EMAIL}`
+    );
 
-    expect(
-      screen.getByLabelText(/correo electrónico/i)
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByLabelText(/tipo de consulta/i)
-    ).toBeInTheDocument();
-
-    expect(screen.getByLabelText(/mensaje/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Nombre \/ responsable/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Correo electrónico/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Tipo de consulta/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Mensaje/i)).toBeInTheDocument();
   });
 
   test("muestra errores si se intenta enviar vacío", () => {
     renderContactPage();
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /enviar solicitud/i })
-    );
+    fireEvent.click(screen.getByRole("button", { name: /Abrir correo preparado/i }));
 
     expect(
-      screen.getByText(/introduce tu nombre o responsable de contacto/i)
+      screen.getByText(/Introduce tu nombre o responsable de contacto/i)
     ).toBeInTheDocument();
-
-    expect(
-      screen.getByText(/introduce un correo electrónico/i)
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText(/selecciona el tipo de consulta/i)
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText(/escribe un breve mensaje/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Introduce un correo electrónico/i)).toBeInTheDocument();
+    expect(screen.getByText(/Selecciona el tipo de consulta/i)).toBeInTheDocument();
+    expect(screen.getByText(/Escribe un breve mensaje/i)).toBeInTheDocument();
   });
 
-  test("envía correctamente el formulario y muestra mensaje de éxito", () => {
+  test("abre un mailto con los datos validados", () => {
+    const openSpy = vi.spyOn(window, "open").mockImplementation(() => null);
     renderContactPage();
 
-    fireEvent.change(screen.getByLabelText(/nombre \/ responsable/i), {
+    fireEvent.change(screen.getByLabelText(/Nombre \/ responsable/i), {
       target: { value: "Marco" },
     });
-
-    fireEvent.change(screen.getByLabelText(/correo electrónico/i), {
+    fireEvent.change(screen.getByLabelText(/Correo electrónico/i), {
       target: { value: "marco@email.com" },
     });
-
-    fireEvent.change(screen.getByLabelText(/tipo de consulta/i), {
-      target: { value: "Solicitar demo" },
+    fireEvent.change(screen.getByLabelText(/Tipo de consulta/i), {
+      target: { value: "Probar RumiAndo" },
     });
-
-    fireEvent.change(screen.getByLabelText(/mensaje/i), {
+    fireEvent.change(screen.getByLabelText(/Mensaje/i), {
       target: {
-        value: "Quiero más información sobre la demo para una explotación.",
+        value: "Quiero probar RumiAndo en una explotación caprina.",
       },
     });
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /enviar solicitud/i })
-    );
+    fireEvent.click(screen.getByRole("button", { name: /Abrir correo preparado/i }));
 
+    expect(openSpy).toHaveBeenCalledWith(
+      expect.stringContaining(`mailto:${CONTACT_EMAIL}`),
+      "_self"
+    );
+    expect(openSpy.mock.calls[0][0]).toContain("Solicitud%20RumiAndo");
     expect(
-      screen.getByText(/solicitud registrada en la demo/i)
+      screen.getByText(/Se ha preparado un correo para rumiando.app@gmail.com/i)
     ).toBeInTheDocument();
   });
 
   test("rellena el email si llega por query params", () => {
-    renderContactPage("/contacto?email=test@demo.com");
+    renderContactPage("/contacto?email=test@rumiando.com");
 
-    expect(screen.getByLabelText(/correo electrónico/i)).toHaveValue(
-      "test@demo.com"
-    );
+    expect(screen.getByLabelText(/Correo electrónico/i)).toHaveValue("test@rumiando.com");
   });
 });
